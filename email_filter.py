@@ -54,7 +54,7 @@ y_pred = model.predict(X_test)
 y_proba = model.predict_proba(X_test)[:, 1]
 #print("pred", y_pred)
 
-def predict_email(model, vectorizer, email):
+def predict_email(model, vectorizer, email, name):
     # Transform the email using the trained vectorizer
     email_tfifile = vectorizer.transform([email])
     
@@ -65,21 +65,22 @@ def predict_email(model, vectorizer, email):
 
     #model.predict_proba()
     
-    # Display the result
-    label = "SPAM" if prob >= 0.5 else "HAM"
-    print(f"pred: {label} (prob = {prob})")
+    label = "SPAM" if prob <= 0.5 else "HAM"
+    print(f"{name}: {label} (prob = {prob})")
     return label, prob
 
-sample_email_1 = "Congratulations! You've won a $500 Amazon gift card. Click here to claim your prize!"
-sample_email_2 = "Hey, can you send me the report from yesterday's meeting?"
-sample_email_3 = "Claim your free gift now! Limited time offer. This special offer is available for a limited time only. Act quickly to secure your spot. For more details, visit our website or contact us directly."
-sample_email_4 = "Dear Barbara, Thank you for reaching out. I have attached the requested document. Please review and let me know if you have any questions. Audience expect eye address. Reality control not clearly including where through that. Last audience western probably. Yourself memory should notice. Happen item science how ability data. Sincerely, Daniel Boyd Your inputis valuable. Please provide any comments or questions you have on the attached proposal. If you have any questions, please feel free to reach out."
-sample_email_5 = "This is a legit email"
-sample_email_6 = "Subject: imbalance gas just in case worse comes to worse . - - - - - - - - - - - - - - - - - - - - - - forwarded by mary poorman / na / enron on 03 / 21 / 2001 11 : 29 am - - - - - - - - - - - - - - - - - - - - - - - - - - - from : juliann kemp / enron @ enronxgate on 03 / 21 / 2001 10 : 39 am to : mary poorman / na / enron @ enron cc : subject : imbalance gas mary we just have two . thanks - julie contract 012 - 87794 - 02 - 001 ( delivery ) meter 981506 we owe them 21 , 771 981244 ( delivery ) koch refinery we owe them 16 , 810"
+email_1 = "Congratulations! You've won a $500 Amazon gift card. Click here to claim your prize!"
+email_2 = "Hey, can you send me the report from yesterday's meeting?"
+email_3 = "Claim your free gift now! Limited time offer. This special offer is available for a limited time only. Act quickly to secure your spot. For more details, visit our website or contact us directly."
+email_4 = "Dear Barbara, Thank you for reaching out. I have attached the requested document. Please review and let me know if you have any questions. Audience expect eye address. Reality control not clearly including where through that. Last audience western probably. Yourself memory should notice. Happen item science how ability data. Sincerely, Daniel Boyd Your inputis valuable. Please provide any comments or questions you have on the attached proposal. If you have any questions, please feel free to reach out."
+email_5 = "This is a legit email"
+email_6 = "Subject: imbalance gas just in case worse comes to worse . - - - - - - - - - - - - - - - - - - - - - - forwarded by mary poorman / na / enron on 03 / 21 / 2001 11 : 29 am - - - - - - - - - - - - - - - - - - - - - - - - - - - from : juliann kemp / enron @ enronxgate on 03 / 21 / 2001 10 : 39 am to : mary poorman / na / enron @ enron cc : subject : imbalance gas mary we just have two . thanks - julie contract 012 - 87794 - 02 - 001 ( delivery ) meter 981506 we owe them 21 , 771 981244 ( delivery ) koch refinery we owe them 16 , 810"
+email_7 = "Hello, kindly give me your social number and your mothers maiden name."
 
-predict_email(model, vectorizer, sample_email_1)
-predict_email(model, vectorizer, sample_email_2)
-predict_email(model, vectorizer, sample_email_3)
-predict_email(model, vectorizer, sample_email_4)
-predict_email(model, vectorizer, sample_email_5)
-predict_email(model, vectorizer, sample_email_6)
+predict_email(model, vectorizer, email_1, "email_1")
+predict_email(model, vectorizer, email_2, "email_2")
+predict_email(model, vectorizer, email_3, "email_3")
+predict_email(model, vectorizer, email_4, "email_4")
+predict_email(model, vectorizer, email_5, "email_5")
+predict_email(model, vectorizer, email_6, "email_6")
+predict_email(model, vectorizer, email_7, "email_7")
