@@ -10,7 +10,7 @@ import kagglehub
 from kagglehub import KaggleDatasetAdapter
 
 # path to dataset file
-file_path = "C:\\Users\\Travi\\Documents\\368Project\\spam_dataset.csv"
+file_path = "spam_dataset.csv"
 
 file = pd.read_csv(file_path)
 #file['message_content'] = file['message_content'].astype(str).fillna("")
