@@ -9,13 +9,12 @@ import pandas as pd
 import kagglehub
 from kagglehub import KaggleDatasetAdapter
 
-# path to dataset file
 file_path = "spam_dataset.csv"
 
-file = pd.read_csv(file_path)#, #encoding="latin1")
+file = pd.read_csv(file_path)
 
 #file['message_content'] = file['message_content'].astype(str).fillna("")
-# Convert labels to binary
+
 file['label'] = file['is_spam']
 
 # vectorizer = HashingVectorizer(
@@ -37,11 +36,8 @@ vectorizer = TfidfVectorizer(
 X = vectorizer.fit_transform(file['message_content'])
 y = file['label']
 
-# # Split dataset
-
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
 
-#Train XGBoost
 model = xgb.XGBClassifier(
     objective='binary:logistic',
     eval_metric='auc',
