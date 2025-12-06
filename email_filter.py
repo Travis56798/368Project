@@ -11,72 +11,61 @@ from kagglehub import KaggleDatasetAdapter
 
 file_path = "spam_dataset.csv"
 
-file = pd.read_csv(file_path)
+file = pd.read_csv(file_path) #loads file into variable
 
-#file['message_content'] = file['message_content'].astype(str).fillna("")
+file['message_content'] = file['message_content'].astype(str).fillna("") #fills in any blank rows with empty strings
 
 file['label'] = file['is_spam']
 
-# vectorizer = HashingVectorizer(
-#     lowercase=True, #converts everything to lowercase
-#     stop_words='english',
-#     n_features=5000,  # number of columns
-#     alternate_sign=False
-#     #ngram_range=(1, 2)
-# )
-
 vectorizer = TfidfVectorizer(
-    lowercase=True,
-    stop_words='english',
-    max_features=200, 
-    ngram_range=(1, 2)
+    lowercase=True,  #converts all words to lowercase
+    stop_words='english',  #removes common english words, like 'the'
+    max_features=200, #stores the most frequent words seen in the data set
+    ngram_range=(1, 2) #extracts single words and pairs of words
 )
 
 
-X = vectorizer.fit_transform(file['message_content'])
-y = file['label']
+x = vectorizer.fit_transform(file['message_content']) #turns message_content into numerical values
+y = file['label'] #stores the corresponding is_spam value(0 or 1)
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42, stratify=y)
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=1, stratify=y) #splits data into training and testing groups
 
-model = xgb.XGBClassifier(
+model = xgb.XGBClassifier(  #sets up a training tree
     objective='binary:logistic',
     eval_metric='auc',
-    n_estimators=200,
+    n_estimators=200, #set equal to max_features
     learning_rate=0.1,
     max_depth=6,
     subsample=0.8,
     colsample_bytree=0.8,
     use_label_encoder=False,
-    random_state=42,
-    tree_method="hist",
-    predictor="gpu_predictor"
+    random_state=1,
+    tree_method="hist",  #ensures less memory is used
+    predictor="gpu_predictor" #speeds up computation time
 )
 
 model.fit(
-    X_train, y_train,
-    eval_set=[(X_test, y_test)],
+    x_train, y_train,
+    eval_set=[(x_test, y_test)],    #trains the model on our data 
     verbose=False
 )
 
-y_pred = model.predict(X_test)
-y_proba = model.predict_proba(X_test)[:, 1]
-#print("pred", y_pred)
+y_pred = model.predict(x_test)          #predicts the label and the probability
+y_prob = model.predict_proba(x_test)[:, 1]
 
 def predict_email(model, vectorizer, email, name):
-    # Transform the email using the trained vectorizer
-    email_tfifile = vectorizer.transform([email])
+    email2 = vectorizer.transform([email])
     
-    # Predict (0 = ham, 1 = spam)
-    pred = model.predict(email_tfifile)[0]
-    prob = model.predict_proba(email_tfifile)[0][1]
-    #print(prob)
-
-    #model.predict_proba()
+    pred = model.predict(email2)[0]  # Predict (0 = ham, 1 = spam)
+    prob = model.predict_proba(email2)[0][1]
     
-    label = "SPAM" if prob >= 0.90 else "HAM"
+    if prob >= 0.90:
+        label = "SPAM" 
+    else:               #labels sham if prob is greater than 90, and ham if it is lower
+        label = "HAM" 
 
     print(f"{name}: {label} (prob = {prob})")
-    return label, prob
+    return
 
 email_1 = "Congratulations! You've won a $500 Amazon gift card. Click here to claim your prize!"
 email_2 = "Hey, can you send me the report from yesterday's meeting?"
@@ -90,7 +79,7 @@ email_9 = "Hi son, this is gramma, Please give monies."
 email_10 = "abcdefghijklmnopqrstuvwxyz now i know my abcs."
 email_11 = "I have hacked your account. Mwahahahah"
 email_12 = "good morning everyone cheryl told me that Mike is working from home this morning because he his kid has a doctor's appointment. He will return to office hopefully around 10 tomorrow morning. Please feel free to call Cheryl if you need assistance. Thanks and have a great day, keegan farrell"
-email_13 = "Ok, Iknow this is blatantly OT but I'm beginning to go insane. Had an old Dell Dimension XPS sitting in the corner and decided to put it to use, I know it was working pre being stuck in the corner, but when I plugged it in, hit the power nothing happened."
+email_13 = "Ok, Iknow this is blatantly OT but I'm beginning to go insane. Had an old Dell Dimension xPS sitting in the corner and decided to put it to use, I know it was working pre being stuck in the corner, but when I plugged it in, hit the power nothing happened."
 
 
 
