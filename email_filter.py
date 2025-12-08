@@ -66,13 +66,11 @@ def api_predict():
         return jsonify({"error": "No JSON received"}), 400
 
     email = data.get("email", "")
-    print(email)
     name = data.get("name", "User")
 
     if email.strip() == "":
         return jsonify({"error": "Email content missing"}), 400
 
-    # Convert email to TF-IDF
     email_tfidf = vectorizer.transform([email])
 
     # Predict
@@ -90,7 +88,7 @@ def api_predict():
 if __name__ == '__main__':
     app.run(debug=True)
 
-email_1 = "Congratulations! You've won a $500 Amazon gift card. Click here to claim your prize!"
+'''email_1 = "Congratulations! You've won a $500 Amazon gift card. Click here to claim your prize!"
 email_2 = "Hey, can you send me the report from yesterday's meeting?"
 email_3 = "Claim your free gift now! Limited time offer. This special offer is available for a limited time only. Act quickly to secure your spot. For more details, visit our website or contact us directly."
 email_4 = "Dear Barbara, Thank you for reaching out. I have attached the requested document. Please review and let me know if you have any questions. Audience expect eye address. Reality control not clearly including where through that. Last audience western probably. Yourself memory should notice. Happen item science how ability data. Sincerely, Daniel Boyd Your inputis valuable. Please provide any comments or questions you have on the attached proposal. If you have any questions, please feel free to reach out."
@@ -118,4 +116,4 @@ predict_email(model, vectorizer, email_9, "email_9")
 predict_email(model, vectorizer, email_10, "email_10")
 predict_email(model, vectorizer, email_11, "email_11")
 predict_email(model, vectorizer, email_12, "email_12")
-predict_email(model, vectorizer, email_13, "email_13")
+predict_email(model, vectorizer, email_13, "email_13")'''
