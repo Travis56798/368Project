@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Email Spam Checker</title>
+    <style>
+        body {
+            font-family: Arial;
+            margin: 40px;
+            background: #f7f7f7;
+        }
+        #container {
+            margin-left: auto;
+            margin-right: auto;
+            background: white;
+            padding: 50px;
+            width: 500px;
+            border-radius: 8px;
+            box-shadow: 0px 0px 10px #ccc;
+            justify-content: center;
+            align-items: center;
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+            padding: 10px;
+        }
+        input, button {
+            padding: 10px;
+            margin-top: 10px;
+            width: 100%;
+        }
+        #result {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div id="container">
+    <h2>Spam Detection</h2>
+
+    <label>Your Name (optional):</label>
+    <input type="text" id="name" placeholder="John Doe">
+    <br><br>
+    <label>Email Message:</label>
+    <textarea id="email" placeholder="Paste the email text here..."></textarea>
+
+    <button onclick="checkSpam()">Check Email</button>
+
+    <div id="result"></div>
+</div>
+
+
+<script>
+function checkSpam() {
+    const email = document.getElementById("email").value;
+    const name = document.getElementById("name").value;
+
+    fetch("/api", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email, name: name })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.error) {
+            document.getElementById("result").innerHTML =
+                "<span style='color:red'>" + data.error + "</span>";
+            return;
+        }
+
+        const color = data.label === "SPAM" ? "red" : "green";
+
+        document.getElementById("result").innerHTML =
+            `<span style="color:${color}">${data.label}</span><br>
+             Probability of Spam: ${data.probability.toFixed(4)}`;
+    });
+}
+</script>
+
+</body>
+</html>
