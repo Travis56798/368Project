@@ -40,7 +40,26 @@
 
 <div id="container">
     <h2>Spam Detection</h2>
+    {%if metrics%}
+    <div style="margin-bottom:20px;">
+        <h3>Model Performance (Test Set)</h3>
 
+        <div class="metric-box">
+            Accuracy: {{ "%.3f"|format(metrics.accuracy) }}
+        </div>
+        <div class="metric-box">
+            Precision: {{ "%.3f"|format(metrics.precision) }}
+        </div>
+        <div class="metric-box">
+            Recall: {{ "%.3f"|format(metrics.recall) }}
+        </div>
+        <p style="font-size:13px; color:#555;">
+            Accuracy: The higher it is, the higher the overall judgment accuracy rate will be<br>
+            Precision: The higher it is, the higher correction for those "SPAM" emails will be <br>
+            Recall: The higher it is, the higher probability for detecting spam emails. <br>
+        </p>
+    </div>
+    {% endif %}
     <label>Your Name (optional):</label>
     <input type="text" id="name" placeholder="John Doe">
     <br><br>
