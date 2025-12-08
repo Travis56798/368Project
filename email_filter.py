@@ -48,12 +48,18 @@ model.fit(
     eval_set=[(x_test, y_test)],    #trains the model on our data 
     verbose=False
 )
-
+y_prob_test = model.predict_proba(x_test)[:, 1]
+y_pred_test = (y_prob_test >= 0.80).astype(int)
+evaluation_results = {
+    "accuracy": float(accuracy_score(y_test, y_pred_test)),
+    "precision": float(precision_score(y_test, y_pred_test, zero_division=0)),
+    "recall": float(recall_score(y_test, y_pred_test, zero_division=0)),}
+print("Model evaluation:", evaluation_results)
 # ROUTES
 
 @app.route('/', methods=['GET'])
 def index():
-    return render_template("index.html")
+    return render_template("index.html",metrics=evaluation_results)
 
 
 
@@ -70,6 +76,10 @@ def api_predict():
 
     if email.strip() == "":
         return jsonify({"error": "Email content missing"}), 400
+
+    max_len = 2000  #avioid the over length influences
+    if len(email) > max_len:
+        email = email[:max_len]
 
     email_tfidf = vectorizer.transform([email])
 
